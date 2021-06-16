@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta name = "viewport" content = "user-scalable=no,width=device-width">
+    <link href = "pingoin.css" rel = "stylesheet" type = "text/css">
+    <title>Melting Ice</title>
+
+  </head>
+
+  <body>
+
+    <!-- Added a menu to navigate from the main page -->
+    <div id = "menu">
+      <p>menu</p>
+      <div id = "menu-list">
+        <br>
+        <a href = "pingoin.html?07">part7</a>
+        <a href = "pingoin.html?play">Play</a>
+        <a href = "pingoin.html?level">Level</a>
+      </div>
+    </div>
+
+    <canvas></canvas>
+    <script type = "text/javascript">
+
+      let part = String(window.location).split("?")[1];
+
+      let parts = {
+
+        "07":["02/controller-02.js", "05/display-05.js", "06/engine-06.js", "07/game-07.js", "07/main-07.js"],
+        "play":["game_files/controller.js", "game_files/display.js", "game_files/engine.js", "game_files/game.js", "game_files/main.js"],
+
+      };
+
+      switch(part) {
+
+        case "07": case "play": break;
+        default:
+          part = "07";
+
+      }
+
+      for (let index = 0; index < parts[part].length; index ++) {
+
+        let script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", parts[part][index]);
+        document.head.appendChild(script);
+
+      }
+
+      let menu      = document.getElementById("menu");
+      let menu_list = document.getElementById("menu-list");
+
+      menu.addEventListener("click", function(event) {
+
+        menu_list.style.display = (menu_list.style.display == "none") ? "grid" : "none";
+
+      });
+
+      menu_list.style.display = "none";
+
+    </script>
+
+  </body>
+
+</html>
