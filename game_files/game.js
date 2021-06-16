@@ -477,7 +477,7 @@ Game.TileSet = function(columns, tile_size) {
                  new f(239, 0, 16, 4), new f(239, 4, 16, 4), new f(239, 9, 16, 4), // grass
                  new f(190, 32, 16, 16, 0, -4), // sit-right
                  new f(128, 48, 16, 16, 0, -4) // sit-left
-                ];
+               ];
 
 };
 Game.TileSet.prototype = { constructor: Game.TileSet };
