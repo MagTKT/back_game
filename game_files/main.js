@@ -16,16 +16,12 @@ window.addEventListener("load", function(event) {
     const unScript = listScript[index].src;
     if(unScript.includes('game_files/main.js')) {
       var world = unScript.split("world=")[1];
-      
-      console.log(world)
     }
-      
-    
   }
 
   //// CONSTANTS ////
   
-  const ZONE_PREFIX = "game_files/map/world"+world+"/zone";
+  const ZONE_PREFIX = "game_files/map/world_"+world+"/zone";
   const ZONE_SUFFIX = ".json";
 
       /////////////////
