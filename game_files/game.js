@@ -483,7 +483,8 @@ Game.TileSet = function(columns, tile_size) {
 Game.TileSet.prototype = { constructor: Game.TileSet };
 
 Game.World = function(friction = 0.85, gravity = 2) {
-
+// friction = coef reduc vitesse
+// gravity = coef de gravité
   this.collider     = new Game.Collider();
 
   this.friction     = friction;

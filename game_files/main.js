@@ -11,9 +11,17 @@ window.addEventListener("load", function(event) {
 
   "use strict";
 
-  //// CONSTANTS ////
+  var listScript = document.getElementsByTagName("script");
+  for (let index = 0; index < listScript.length; index++) {
+    const unScript = listScript[index].src;
+    if(unScript.includes('game_files/main.js')) {
+      var world = unScript.split("world=")[1];
+    }
+  }
 
-  const ZONE_PREFIX = "game_files/map/zone";
+  //// CONSTANTS ////
+  
+  const ZONE_PREFIX = "game_files/map/world_"+world+"/zone";
   const ZONE_SUFFIX = ".json";
 
       /////////////////
