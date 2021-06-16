@@ -467,23 +467,24 @@ Game.TileSet = function(columns, tile_size) {
 
   let f = Game.Frame;
 
-  this.frames = [new f(208, 96, 15, 16, 0, -4), // idle-left
-                 new f(209, 112, 15, 16, 0, -4), // jump-left
-                 new f(208, 96, 15, 16, 0, -4), new f(224, 96, 15, 16, 0, -4), new f(240, 96, 15, 16, 0, -4), new f(208,  96, 15, 16, 0, -4), // walk-left
-                 new f(161, 96, 15, 16, 0, -4), // idle-right
-                 new f(194, 112, 15, 16, 0, -4), // jump-right
-                 new f(161, 96, 15, 16, 0, -4), new f(176, 96, 15, 16, 0, -4), new f(192, 96, 15, 16, 0, -4), new f(  161, 96, 15, 16, 0, -4), // walk-right
-                 new f(158, 112, 16, 16), new f(174, 112, 16, 16), // ice_cube
-                 new f(126, 115, 16, 4), new f(126, 119, 16, 4), new f(126, 124, 16, 4), // grass
-                 new f(224, 112, 16, 16, 0, -4), // sit-right
-                 new f(240, 112, 16, 16, 0, -4) // sit-left
-                ];
+  this.frames = [new f(159, 48, 15, 16, 0, -4), // idle-left
+                 new f(144, 48, 15, 16, 0, -4), // jump-left
+                 new f(159, 48, 15, 16, 0, -4), new f(175, 48, 15, 16, 0, -4), new f(191, 48, 15, 16, 0, -4), new f(159, 48, 15, 16, 0, -4), // walk-left
+                 new f(128, 32, 15, 16, 0, -4), // idle-right
+                 new f(175, 32, 15, 16, 0, -4), // jump-right
+                 new f(128, 32, 15, 16, 0, -4), new f(144, 32, 15, 16, 0, -4), new f(159, 32, 15, 16, 0, -4), new f(128, 32, 15, 16, 0, -4), // walk-right
+                 new f(206, 32, 16, 16), new f(222, 32, 16, 16), // ice_cube
+                 new f(239, 0, 16, 4), new f(239, 4, 16, 4), new f(239, 9, 16, 4), // grass
+                 new f(190, 32, 16, 16, 0, -4), // sit-right
+                 new f(128, 48, 16, 16, 0, -4) // sit-left
+               ];
 
 };
 Game.TileSet.prototype = { constructor: Game.TileSet };
 
 Game.World = function(friction = 0.85, gravity = 2) {
-
+// friction = coef reduc vitesse
+// gravity = coef de gravité
   this.collider     = new Game.Collider();
 
   this.friction     = friction;
