@@ -253,11 +253,12 @@ Game.MovingObject = function(x, y, width, height, velocity_max = 15) {
   Game.Object.call(this, x, y, width, height);
 
   this.jumping      = false;
+  // this.sitting      = false;
   this.velocity_max = velocity_max;// added velocity_max so velocity can't go past 16
   this.velocity_x   = 0;
   this.velocity_y   = 0;
   this.x_old        = x;
-  this.y_old        = y;
+  this.y_old        = y;  
 
 };
 /* I added setCenterX, setCenterY, getCenterX, and getCenterY */
@@ -352,10 +353,10 @@ Game.Player = function(x, y) {
 
   Game.MovingObject.call(this, x, y, 7, 12);
 
-  Game.Animator.call(this, Game.Player.prototype.frame_sets["idle-left"], 10);
+  Game.Animator.call(this, Game.Player.prototype.frame_sets["idle-right"], 10);
 
   this.jumping     = true;
-  this.direction_x = -1;
+  this.direction_x = 1;
   this.velocity_x  = 0;
   this.velocity_y  = 0;
 
@@ -369,34 +370,41 @@ Game.Player.prototype = {
     "move-left" : [2, 3, 4, 5],
     "idle-right": [6],
     "jump-right": [7],
-    "move-right": [8, 9, 10, 11]
+    "move-right": [8, 9, 10, 11],
+    "sit-right": [17],
+    "sit-left": [18]
 
   },
 
   jump: function() {
-
+    // console.log(this.jumping)
     /* Made it so you can only jump if you aren't falling faster than 10px per frame. */
     if (!this.jumping && this.velocity_y < 10) {
 
       this.jumping     = true;
       this.velocity_y -= 13;
-
+      this.sitting     = false;
     }
 
+  },
+  sit: function() {
+
+      this.sitting     = true;
+          
   },
 
   moveLeft: function() {
 
     this.direction_x = -1;
     this.velocity_x -= 0.55;
-
+    this.sitting     = false;
   },
 
   moveRight:function(frame_set) {
 
     this.direction_x = 1;
     this.velocity_x += 0.55;
-
+    this.sitting     = false;
   },
 
   updateAnimation:function() {
@@ -406,6 +414,11 @@ Game.Player.prototype = {
       if (this.direction_x < 0) this.changeFrameSet(this.frame_sets["jump-left"], "pause");
       else this.changeFrameSet(this.frame_sets["jump-right"], "pause");
 
+    } else if(this.sitting) {
+
+      if (this.direction_x < 0) this.changeFrameSet(this.frame_sets["sit-left"], "pause");
+      else this.changeFrameSet(this.frame_sets["sit-right"], "pause");
+    
     } else if (this.direction_x < 0) {
 
       if (this.velocity_x < -0.1) this.changeFrameSet(this.frame_sets["move-left"], "loop", 5);
