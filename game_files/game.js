@@ -8,7 +8,7 @@
   4. Added the Game.Ice_cube class and Game.Grass class.
   5. Added frames for ice_cubes and grass to the tile_set.
   6. Made a slight change to the Game.Animator constructor.
-  7. Added carrot_count to count ice_cubes.
+  7. Added ice_cube_count to count ice_cubes.
   8. Added the grass array to the zone file. Also reflected in Game.World
 
 */
@@ -498,7 +498,7 @@ Game.World = function(friction = 0.85, gravity = 2) {
   this.zone_id      = "00";
 
   this.ice_cubes      = [];// the array of ice_cubes in this zone;
-  this.carrot_count = 0;// the number of ice_cubes you have.
+  this.ice_cube_count = 0;// the number of ice_cubes you have.
   this.doors        = [];
   this.door         = undefined;
 
@@ -609,7 +609,7 @@ Game.World.prototype = {
       if (ice_cube.collideObject(this.player)) {
 
         this.ice_cubes.splice(this.ice_cubes.indexOf(ice_cube), 1);
-        this.carrot_count ++;
+        this.ice_cube_count ++;
 
       }
 
