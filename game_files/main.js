@@ -11,9 +11,17 @@ window.addEventListener("load", function(event) {
 
   "use strict";
 
-  //// CONSTANTS ////
+  var listScript = document.getElementsByTagName("script");
+  for (let index = 0; index < listScript.length; index++) {
+    const unScript = listScript[index].src;
+    if(unScript.includes('game_files/main.js')) {
+      var world = unScript.split("world=")[1];
+    }
+  }
 
-  const ZONE_PREFIX = "game_files/map/zone";
+  //// CONSTANTS ////
+  
+  const ZONE_PREFIX = "game_files/map/world_"+world+"/zone";
   const ZONE_SUFFIX = ".json";
 
       /////////////////
@@ -124,7 +132,7 @@ window.addEventListener("load", function(event) {
 
     }
 
-    p.innerHTML = "Glace: " + game.world.carrot_count;
+    p.innerHTML = "Glace: " + game.world.ice_cube_count;
 
     display.render();
 
@@ -135,6 +143,8 @@ window.addEventListener("load", function(event) {
     if (controller.left.active ) { game.world.player.moveLeft ();                               }
     if (controller.right.active) { game.world.player.moveRight();                               }
     if (controller.up.active   ) { game.world.player.jump();      controller.up.active = false; }
+    if (controller.bottom.active) { game.world.player.sit();      controller.bottom.active = false; }
+
 
     game.update();
 

@@ -14,40 +14,41 @@
 
     <!-- Added a menu to navigate from the main page -->
     <div id = "menu">
-      <p>menu</p>
+      <p>Menu</p>
       <div id = "menu-list">
         <br>
-        <a href = "pingoin.html?07">part7</a>
-        <a href = "pingoin.html?play">Play</a>
-        <a href = "pingoin.html?level">Level</a>
+        <a href = "pingoin.html?tuto">Tuto</a>
+        <a href = "pingoin.html?1">Monde 1</a>
+<!--         <a href = "pingoin.html?2">Monde 2</a>
+        <a href = "pingoin.html?3">Monde 3</a> -->
       </div>
     </div>
 
     <canvas></canvas>
     <script type = "text/javascript">
 
-      let part = String(window.location).split("?")[1];
+      let world = String(window.location).split("?")[1];
 
-      let parts = {
-
-        "07":["02/controller-02.js", "05/display-05.js", "06/engine-06.js", "07/game-07.js", "07/main-07.js"],
-        "play":["game_files/controller.js", "game_files/display.js", "game_files/engine.js", "game_files/game.js", "game_files/main.js"],
-
-      };
-
-      switch(part) {
-
-        case "07": case "play": break;
+      switch(world) {
+        case "1": case "2": case "3": case "tuto": break;
         default:
-          part = "07";
-
+          world = "tuto";
       }
 
-      for (let index = 0; index < parts[part].length; index ++) {
+      let files = [
+        "game_files/controller.js", 
+        "game_files/display.js", 
+        "game_files/engine.js", 
+        "game_files/game.js", 
+        "game_files/main.js?world="+world
+      ];
+
+
+      for (let index = 0; index < files.length; index ++) {
 
         let script = document.createElement("script");
         script.setAttribute("type", "text/javascript");
-        script.setAttribute("src", parts[part][index]);
+        script.setAttribute("src", files[index]);
         document.head.appendChild(script);
 
       }

@@ -8,7 +8,7 @@
   4. Added the Game.Ice_cube class and Game.Grass class.
   5. Added frames for ice_cubes and grass to the tile_set.
   6. Made a slight change to the Game.Animator constructor.
-  7. Added carrot_count to count ice_cubes.
+  7. Added ice_cube_count to count ice_cubes.
   8. Added the grass array to the zone file. Also reflected in Game.World
 
 */
@@ -253,11 +253,12 @@ Game.MovingObject = function(x, y, width, height, velocity_max = 15) {
   Game.Object.call(this, x, y, width, height);
 
   this.jumping      = false;
+  // this.sitting      = false;
   this.velocity_max = velocity_max;// added velocity_max so velocity can't go past 16
   this.velocity_x   = 0;
   this.velocity_y   = 0;
   this.x_old        = x;
-  this.y_old        = y;
+  this.y_old        = y;  
 
 };
 /* I added setCenterX, setCenterY, getCenterX, and getCenterY */
@@ -281,7 +282,7 @@ Object.assign(Game.MovingObject.prototype, Game.Object.prototype);
 Game.MovingObject.prototype.constructor = Game.MovingObject;
 
 /* The ice_cube class extends Game.Object and Game.Animation. */
-Game.Ice_cube = function(x, y) {
+Game.Ice_cube = function(x, y, zone_id) {
 
   Game.Object.call(this, x, y, 7, 14);
   Game.Animator.call(this, Game.Ice_cube.prototype.frame_sets["twirl"], 15);
@@ -295,6 +296,7 @@ Game.Ice_cube = function(x, y) {
   this.base_y     = y;
   this.position_x = Math.random() * Math.PI * 2;
   this.position_y = this.position_x * 2;
+  this.zone_id   = zone_id;
 
 };
 Game.Ice_cube.prototype = {
@@ -352,10 +354,10 @@ Game.Player = function(x, y) {
 
   Game.MovingObject.call(this, x, y, 7, 12);
 
-  Game.Animator.call(this, Game.Player.prototype.frame_sets["idle-left"], 10);
+  Game.Animator.call(this, Game.Player.prototype.frame_sets["idle-right"], 10);
 
   this.jumping     = true;
-  this.direction_x = -1;
+  this.direction_x = 1;
   this.velocity_x  = 0;
   this.velocity_y  = 0;
 
@@ -369,34 +371,41 @@ Game.Player.prototype = {
     "move-left" : [2, 3, 4, 5],
     "idle-right": [6],
     "jump-right": [7],
-    "move-right": [8, 9, 10, 11]
+    "move-right": [8, 9, 10, 11],
+    "sit-right": [17],
+    "sit-left": [18]
 
   },
 
   jump: function() {
-
+    // console.log(this.jumping)
     /* Made it so you can only jump if you aren't falling faster than 10px per frame. */
     if (!this.jumping && this.velocity_y < 10) {
 
       this.jumping     = true;
       this.velocity_y -= 13;
-
+      this.sitting     = false;
     }
 
+  },
+  sit: function() {
+
+      this.sitting     = true;
+          
   },
 
   moveLeft: function() {
 
     this.direction_x = -1;
     this.velocity_x -= 0.55;
-
+    this.sitting     = false;
   },
 
   moveRight:function(frame_set) {
 
     this.direction_x = 1;
     this.velocity_x += 0.55;
-
+    this.sitting     = false;
   },
 
   updateAnimation:function() {
@@ -406,6 +415,11 @@ Game.Player.prototype = {
       if (this.direction_x < 0) this.changeFrameSet(this.frame_sets["jump-left"], "pause");
       else this.changeFrameSet(this.frame_sets["jump-right"], "pause");
 
+    } else if(this.sitting) {
+
+      if (this.direction_x < 0) this.changeFrameSet(this.frame_sets["sit-left"], "pause");
+      else this.changeFrameSet(this.frame_sets["sit-right"], "pause");
+    
     } else if (this.direction_x < 0) {
 
       if (this.velocity_x < -0.1) this.changeFrameSet(this.frame_sets["move-left"], "loop", 5);
@@ -454,21 +468,24 @@ Game.TileSet = function(columns, tile_size) {
 
   let f = Game.Frame;
 
-  this.frames = [new f(208,  96, 15, 16, 0, -4), // idle-left
-                 new f( 225,  112, 15, 16, 0, -4), // jump-left
-                 new f(208,  96, 15, 16, 0, -4), new f(224, 96, 15, 16, 0, -4), new f(240, 96, 15, 16, 0, -4), new f(208,  96, 15, 16, 0, -4), // walk-left
-                 new f(  161, 96, 15, 16, 0, -4), // idle-right
-                 new f( 210, 112, 15, 16, 0, -4), // jump-right
-                 new f(  161, 96, 15, 16, 0, -4), new f(176, 96, 15, 16, 0, -4), new f(192, 96, 15, 16, 0, -4), new f(  161, 96, 15, 16, 0, -4), // walk-right
-                 new f( 174, 112, 16, 16), new f(190, 112, 16, 16), // ice_cube
-                 new f(142, 115, 16,  4), new f(142, 124, 16, 4), new f(142, 119, 16, 4) // grass
-                ];
+  this.frames = [new f(159, 48, 15, 16, 0, -4), // idle-left
+                 new f(144, 48, 15, 16, 0, -4), // jump-left
+                 new f(159, 48, 15, 16, 0, -4), new f(175, 48, 15, 16, 0, -4), new f(191, 48, 15, 16, 0, -4), new f(159, 48, 15, 16, 0, -4), // walk-left
+                 new f(128, 32, 15, 16, 0, -4), // idle-right
+                 new f(175, 32, 15, 16, 0, -4), // jump-right
+                 new f(128, 32, 15, 16, 0, -4), new f(144, 32, 15, 16, 0, -4), new f(159, 32, 15, 16, 0, -4), new f(128, 32, 15, 16, 0, -4), // walk-right
+                 new f(206, 32, 16, 16), new f(222, 32, 16, 16), // ice_cube
+                 new f(239, 0, 16, 4), new f(239, 4, 16, 4), new f(239, 9, 16, 4), // grass
+                 new f(190, 32, 16, 16, 0, -4), // sit-right
+                 new f(128, 48, 16, 16, 0, -4) // sit-left
+               ];
 
 };
 Game.TileSet.prototype = { constructor: Game.TileSet };
 
-Game.World = function(friction = 0.85, gravity = 2) {
-
+Game.World = function(friction = 0.87, gravity = 2) {
+// friction = coef reduc vitesse
+// gravity = coef de gravité
   this.collider     = new Game.Collider();
 
   this.friction     = friction;
@@ -483,7 +500,9 @@ Game.World = function(friction = 0.85, gravity = 2) {
   this.zone_id      = "00";
 
   this.ice_cubes      = [];// the array of ice_cubes in this zone;
-  this.carrot_count = 0;// the number of ice_cubes you have.
+  this.ice_cube_count = 0;// the number of ice_cubes you have.
+  this.already_pick = {};
+
   this.doors        = [];
   this.door         = undefined;
 
@@ -534,12 +553,33 @@ Game.World.prototype = {
     this.columns            = zone.columns;
     this.rows               = zone.rows;
     this.zone_id            = zone.id;
+    var pick                = [];
+
+
+    if (this.already_pick[this.zone_id]) {
+      for (let indexPick = this.already_pick[this.zone_id].length - 1; indexPick > -1; -- indexPick) {
+        var cube_pick = this.already_pick[this.zone_id][indexPick];
+       
+          for (let indexBase = zone.ice_cubes.length - 1; indexBase > -1; -- indexBase) {
+          let ice_cube = zone.ice_cubes[indexBase];
+
+          if (ice_cube[0] == cube_pick[0] && ice_cube[1] == cube_pick[1]) {
+            
+            pick[indexBase] = indexBase;
+          }
+        }
+      }
+    }
 
     for (let index = zone.ice_cubes.length - 1; index > -1; -- index) {
 
       let ice_cube = zone.ice_cubes[index];
-      this.ice_cubes[index] = new Game.Ice_cube(ice_cube[0] * this.tile_set.tile_size + 5, ice_cube[1] * this.tile_set.tile_size - 2);
-
+      if (typeof(pick[index]) == "undefined" ){
+        this.ice_cubes[index] = new Game.Ice_cube(ice_cube[0] * this.tile_set.tile_size + 5, ice_cube[1] * this.tile_set.tile_size - 2, this.zone_id);  
+      }
+      else{
+        this.ice_cubes[index] = new Game.Ice_cube(-50, -50, this.zone_id); // si déjà rammassé on le fait spawn en dehors de la map, sinon ça plante
+      }
     }
 
     for (let index = zone.doors.length - 1; index > -1; -- index) {
@@ -592,9 +632,19 @@ Game.World.prototype = {
       ice_cube.animate();
 
       if (ice_cube.collideObject(this.player)) {
+        // pour gérer l'affichage des ice_cube déjà ramassé plus tard
+        let x_cube = (ice_cube.base_x - 5)/ this.tile_set.tile_size;// remet x en casse
+        let y_cube = (ice_cube.base_y + 2) / this.tile_set.tile_size;// remet y en casse
+        let zone = ice_cube.zone_id;
 
-        this.ice_cubes.splice(this.ice_cubes.indexOf(ice_cube), 1);
-        this.carrot_count ++;
+        if (this.already_pick[zone]) {
+          this.already_pick[zone].push([x_cube , y_cube]);
+        }else{
+          Object.assign(this.already_pick,{[zone]:[[x_cube , y_cube]]});
+        }
+
+        this.ice_cubes.splice(this.ice_cubes.indexOf(ice_cube), 1);//fait disparraitre le glacon sur la map
+        this.ice_cube_count ++;
 
       }
 
