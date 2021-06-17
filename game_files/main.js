@@ -132,7 +132,7 @@ window.addEventListener("load", function(event) {
 
     }
 
-    p.innerHTML = "Glace: " + game.world.carrot_count;
+    p.innerHTML = "Glace: " + game.world.ice_cube_count;
 
     display.render();
 
