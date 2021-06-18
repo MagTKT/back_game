@@ -12,10 +12,10 @@
         "destination_zone":"07", "destination_x":-1, "destination_y":144 },
 
       { "x":-16, "y":16, "width":16, "height":16,
-        "destination_zone":"09", "destination_x":192, "destination_y":16 },
+        "destination_zone":"09", "destination_x":190, "destination_y":-1 },
         
       { "x":-16, "y":48, "width":16, "height":16,
-        "destination_zone":"09", "destination_x":192, "destination_y":48 }
+        "destination_zone":"09", "destination_x":192, "destination_y":-1 }
   
   
     ],
