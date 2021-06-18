@@ -497,7 +497,7 @@ Game.World = function(friction = 0.87, gravity = 2) {
   this.tile_set     = new Game.TileSet(8, 16);
   this.player       = new Game.Player(32, 76);
 
-  this.zone_id      = "07";
+  this.zone_id      = "00";
 
   this.ice_cubes      = [];// the array of ice_cubes in this zone;
   this.ice_cube_count = 0;// the number of ice_cubes you have.
