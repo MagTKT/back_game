@@ -7,10 +7,10 @@
 
 
     { "x":-16, "y":96, "width":16, "height":64,
-      "destination_zone":"01", "destination_x":192, "destination_y":32 },
+      "destination_zone":"01", "destination_x":190, "destination_y":42 },
 
     { "x":-16, "y":16, "width":16, "height":16,
-      "destination_zone":"04", "destination_x":192, "destination_y":96 },
+      "destination_zone":"04", "destination_x":190, "destination_y":106 },
 
 
     { "x":192, "y":32, "width":16, "height":16,
