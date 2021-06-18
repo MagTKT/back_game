@@ -282,7 +282,7 @@ Object.assign(Game.MovingObject.prototype, Game.Object.prototype);
 Game.MovingObject.prototype.constructor = Game.MovingObject;
 
 /* The ice_cube class extends Game.Object and Game.Animation. */
-Game.Ice_cube = function(x, y) {
+Game.Ice_cube = function(x, y, zone_id) {
 
   Game.Object.call(this, x, y, 7, 14);
   Game.Animator.call(this, Game.Ice_cube.prototype.frame_sets["twirl"], 15);
@@ -296,6 +296,7 @@ Game.Ice_cube = function(x, y) {
   this.base_y     = y;
   this.position_x = Math.random() * Math.PI * 2;
   this.position_y = this.position_x * 2;
+  this.zone_id   = zone_id;
 
 };
 Game.Ice_cube.prototype = {
@@ -500,6 +501,8 @@ Game.World = function(friction = 0.87, gravity = 2) {
 
   this.ice_cubes      = [];// the array of ice_cubes in this zone;
   this.ice_cube_count = 0;// the number of ice_cubes you have.
+  this.already_pick = {};
+
   this.doors        = [];
   this.door         = undefined;
 
@@ -550,12 +553,33 @@ Game.World.prototype = {
     this.columns            = zone.columns;
     this.rows               = zone.rows;
     this.zone_id            = zone.id;
+    var pick                = [];
+
+
+    if (this.already_pick[this.zone_id]) {
+      for (let indexPick = this.already_pick[this.zone_id].length - 1; indexPick > -1; -- indexPick) {
+        var cube_pick = this.already_pick[this.zone_id][indexPick];
+       
+          for (let indexBase = zone.ice_cubes.length - 1; indexBase > -1; -- indexBase) {
+          let ice_cube = zone.ice_cubes[indexBase];
+
+          if (ice_cube[0] == cube_pick[0] && ice_cube[1] == cube_pick[1]) {
+            
+            pick[indexBase] = indexBase;
+          }
+        }
+      }
+    }
 
     for (let index = zone.ice_cubes.length - 1; index > -1; -- index) {
 
       let ice_cube = zone.ice_cubes[index];
-      this.ice_cubes[index] = new Game.Ice_cube(ice_cube[0] * this.tile_set.tile_size + 5, ice_cube[1] * this.tile_set.tile_size - 2);
-
+      if (typeof(pick[index]) == "undefined" ){
+        this.ice_cubes[index] = new Game.Ice_cube(ice_cube[0] * this.tile_set.tile_size + 5, ice_cube[1] * this.tile_set.tile_size - 2, this.zone_id);  
+      }
+      else{
+        this.ice_cubes[index] = new Game.Ice_cube(-50, -50, this.zone_id); // si déjà rammassé on le fait spawn en dehors de la map, sinon ça plante
+      }
     }
 
     for (let index = zone.doors.length - 1; index > -1; -- index) {
@@ -608,8 +632,18 @@ Game.World.prototype = {
       ice_cube.animate();
 
       if (ice_cube.collideObject(this.player)) {
+        // pour gérer l'affichage des ice_cube déjà ramassé plus tard
+        let x_cube = (ice_cube.base_x - 5)/ this.tile_set.tile_size;// remet x en casse
+        let y_cube = (ice_cube.base_y + 2) / this.tile_set.tile_size;// remet y en casse
+        let zone = ice_cube.zone_id;
 
-        this.ice_cubes.splice(this.ice_cubes.indexOf(ice_cube), 1);
+        if (this.already_pick[zone]) {
+          this.already_pick[zone].push([x_cube , y_cube]);
+        }else{
+          Object.assign(this.already_pick,{[zone]:[[x_cube , y_cube]]});
+        }
+
+        this.ice_cubes.splice(this.ice_cubes.indexOf(ice_cube), 1);//fait disparraitre le glacon sur la map
         this.ice_cube_count ++;
 
       }
