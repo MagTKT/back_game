@@ -11,7 +11,7 @@
       "destination_zone":"00", "destination_x":-1, "destination_y":0 },
 
     { "x":192, "y":16, "width":16, "height":32,
-      "destination_zone":"10", "destination_x":0, "destination_y":96 }
+      "destination_zone":"10", "destination_x":0, "destination_y":122 }
     
   ],
 
@@ -29,7 +29,7 @@
                   ,8,1,1,1,1,3,1,1,2,47,39,8],
 
   "collision_map":[0,4,4,4,3,0,9,4,0,0,0,4
-                  ,2,0,0,0,14,0,12,0,12,0,6,0
+                  ,2,0,0,0,14,0,14,0,12,0,6,0
                   ,2,0,11,0,0,0,0,0,0,14,0,0
                   ,2,0,10,1,0,1,0,1,0,1,0,9
                   ,6,0,10,0,0,0,0,0,11,1,0,8
